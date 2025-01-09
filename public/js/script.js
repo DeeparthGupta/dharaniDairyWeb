@@ -1,28 +1,30 @@
-document.getElementById('contact-form').addEventListener('submit', function (e) {
-  e.preventDefault(); // Prevent page refresh
+const { contentType } = require("express/lib/response");
 
-  // Get form data
-  const name = document.getElementById('name').value;
-  const email = document.getElementById('email').value;
-  const message = document.getElementById('message').value;
+$(document).ready(function(){
+  $('contact-form').on('submit',function(e){
+    e.preventDefault(); //prevents page refresh
 
-  // Send form data to the backend
-  fetch('/submit-form', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ name, email, message })
-  })
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById('form-response').textContent = data;
-    })
-    .catch(error => {
-      console.error('Error:', error);
-      document.getElementById('form-response').textContent = 'There was an error submitting the form.';
+    //Get the values from the contact form
+    const name = $('name').val();
+    const email = $('email').val();
+    const phone = $('phone').val();
+    const message = $('message').val();
+
+    //Send data to the backend
+    $.ajax({
+      url: "/submit-form",
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({name, email, phone, message}),
+      success: function(data){
+        $('#form-response ').text(data);
+      },
+      error: function(error){
+        console.error('Error:', error);
+        $('#form-response').text('An error has occured.')
+      }
     });
-
-  // Reset the form
-  this.reset();
+    //Reset the form
+    this.reset();
+  });
 });

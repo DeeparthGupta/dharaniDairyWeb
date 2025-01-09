@@ -30,10 +30,10 @@ db.connect((err) => {
 
 // API to handle form submissions
 app.post('/submit-form', (req, res) => {
-  const { name, email, message } = req.body;
+  const { name, email, phone, message } = req.body;
 
-  const query = 'INSERT INTO contact_form (name, email, message) VALUES (?, ?, ?)';
-  db.query(query, [name, email, message], (err, result) => {
+  const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?)';
+  db.query(query, [name, email, phone, message], (err, result) => {
     if (err) {
       console.error('Error inserting data:', err);
       return res.status(500).send('Database error');
