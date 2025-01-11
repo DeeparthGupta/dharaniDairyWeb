@@ -65,15 +65,15 @@ section {
 
 #prices-section h2 {
     text-align: center;
-    font-size: clamp(2rem, 5vw, 4rem);
-    margin-bottom: calc(var(--spacing-unit) * 2);
+    font-size: 4rem;
+    margin-bottom: calc(var(--spacing-unit) * 0);
 }
 
 /* Products Grid Layout */
 .products-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: calc(var(--spacing-unit) * 2);
+    gap: calc(var(--spacing-unit) * 1);
 }
 
 /* Product Card Styling */
@@ -82,8 +82,8 @@ section {
 }
 
 .price-img {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: var(--spacing-unit);
