@@ -90,6 +90,63 @@ section {
 }
 
 /* ==========================================================================
+   Quote Section Styles
+   ========================================================================== */
+
+#quote-section{
+  padding: calc(var(--spacing-unit)*4) 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/*CSS Grids container*/
+.quote-grid{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap:calc(var(--spacing-unit)*4);
+  align-items: center;
+}
+
+.quote-image-area{
+  width: 100%;
+  position: relative;
+}
+
+.quote-image{
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.quote-image img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/*Text area styles*/
+.quote-text-area{
+  width: 100%;
+  padding: var(--spacing-unit);
+}
+
+.quote-text-area h2{
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  margin-bottom: calc(var(--spacing-unit)*1.5);
+  color: #000;
+}
+
+.quote-text-area p{
+  font-size: 1.1rem;
+  line-height: 1.6r;
+  color: #666;
+  margin-bottom: calc(var(--spacing-unit)*2);
+}
+
+/* ==========================================================================
    Contact Form Styles
    ========================================================================== */
 #form-section h2 {
@@ -125,11 +182,11 @@ section {
 /* Button Styles */
 .black-button {
     width: 30%;
-    padding: calc(var(--spacing-unit) * 0.75);
+    padding: 1rem 2rem;
     background-color: #000;
     color: var(--text-light);
     border: none;
-    border-radius: 20px;
+    border-radius: 30px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
@@ -156,5 +213,21 @@ section {
     .form-group textarea,
     button {
         padding: calc(var(--spacing-unit) * 0.5);
+    }
+
+    .quote-grid{
+      /*Stack columns on smaller screens*/
+      grid-template-columns: 1fr;
+      gap: calc(var(--spacing-unit)*2);
+    }
+
+    .quote-image-area{
+      /*Center and limit image width on smaller screens*/
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .quote-text-area{
+      text-align: center;
     }
 }
