@@ -4,26 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dharani Dairy</title>
+    <!-- External stylesheet -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+    <!-- Header with hero image -->
     <header>
         <h1>Dharani Dairy</h1>
     </header>
     
     <main>
-        <!-- Prices Section -->
+        <!-- Products and Pricing Section -->
         <section id="prices-section">
             <div class="container">
                 <h2>Prices</h2>
                 <div class="products-grid">
+                    <!-- Product Card - Cow Milk -->
                     <article class="price-card">
                         <img src="./assets/tea-cup.jpg" alt="Cow Milk" class="price-img">
                         <div class="price-details">
-                          <p>Cow Milk - (500 ml)</p>
-                          <p>₹50</p>
-                      </div>
+                            <p>Cow Milk - (500 ml)</p>
+                            <p>₹50</p>
+                        </div>
                     </article>
+                    <!-- Product Card - Buffalo Milk -->
                     <article class="price-card">
                         <img src="./assets/tea-cup.jpg" alt="Buffalo Milk" class="price-img">
                         <div class="price-details">
@@ -35,37 +39,44 @@
             </div>
         </section>
 
-        <!--Words section-->
+        <!-- Reserved section for future content -->
         <section id="words-section">
             <div class="container"></div>
         </section>
 
-        <!-- Contact form section -->
+        <!-- Contact Form Section -->
         <section id="form-section">
             <div class="container">
                 <h2>Contact Us</h2>
                 <form id="contact-form">
+                    <!-- Name Field -->
                     <div class="form-group">
                         <input type="text" id="name" name="name" placeholder="Name" required>
                     </div>
+                    <!-- Email Field -->
                     <div class="form-group">
                         <input type="email" id="email" name="email" placeholder="Email" required>
                     </div>
+                    <!-- Phone Field -->
                     <div class="form-group">
                         <input type="tel" id="phone" name="phone" placeholder="Phone number" required>
                     </div>
+                    <!-- Message Field -->
                     <div class="form-group">
                         <textarea id="message" name="message" placeholder="Query" required></textarea>
                     </div>
+                    <!-- Submit Button -->
                     <div class="form-group">
                         <center><button type="submit" class="black-button">Submit</button></center>
                     </div>
                 </form>
+                <!-- Form submission response message -->
                 <p id="form-response" class="form-message"></p>
             </div>
         </section>
     </main>
 
+    <!-- JavaScript -->
     <script src="js/script.js"></script>
 </body>
 </html>
