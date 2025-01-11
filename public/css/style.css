@@ -2,13 +2,13 @@
    Global CSS Custom Properties
    ========================================================================== */
    :root {
-    --primary-color: #0b7383;
+    --primary-color: #0d7f9a;
     --primary-dark: #094061;
     --text-light: #ffffff;
     --off-white: #f5f5f5;
     --spacing-unit: 1rem;
     --container-width: 1200px;
-    --base-fonts: Arial, sans-serif;
+    --base-fonts: Arial, sans-serif, Roboto;
 }
 
 /* ==========================================================================
