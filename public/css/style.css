@@ -218,10 +218,11 @@ section {
 
 .circle-content{
 	color: var(--text-light);
-	font-size: clamp(1rem,3vw,2rem);
+	font-size: clamp(1rem,1.5vw,2rem);
 	text-align: center;
 	padding: var(--spacing-unit);
 	text-transform: uppercase;
+	font-weight: bolder;
 }
 
 /* ==========================================================================
@@ -291,5 +292,9 @@ section {
 
 	.promo-text-area{
 	  text-align: center;
+	}
+
+	.circle-content{
+		font-size: clamp(0.5rem,3vw,1.5rem);
 	}
 }
