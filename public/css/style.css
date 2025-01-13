@@ -9,6 +9,9 @@
 	--spacing-unit: 1rem;
 	--container-width: 1200px;
 	--base-fonts: Arial, sans-serif, Roboto;
+	--nav-height: clamp(3.5rem, 5vw, 4.5rem);
+	--transition-speed: 0.3s;
+	--container-padding: clamp(1rem, 5vw, 3rem);
 }
 
 /* ==========================================================================
@@ -41,21 +44,61 @@ body,html{
 }
 
 /* ==========================================================================
-   Header Styles
+   Nav Styles
    ========================================================================== */
-/* header {
-	position: relative;
-	min-height: 50vw;
-	max-height: 90vh;
-	background: url('../assets/') center/cover no-repeat;
-	display: grid;
-	place-items: center;
+.top-nav{
+	position:fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: var(--nav-height);
+	background-color: #fff;
+	color: #000;
+	z-index: 1000;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-header h1 {
-	color: var(--text-light);
-	text-align: center;
-} */
+.nav-container{
+	max-width: min(100%-2rem, var(--container-width));
+	margin-inline: auto;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-inline: var(--container-padding);
+}
+
+.logo a{
+	columns: #000;
+	text-decoration: none;
+	font-size: clamp(1.2rem, 3vw, 1.5rem);
+	font-weight: bold;
+}
+
+.nav-links{
+	display: flex;
+	gap: clamp(1rem, 3vw, 2rem);
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.nav-links a{
+	color: #000;
+	text-decoration: none;
+	font-size: clamp(0.9rem, 2vw, 1.1rem);
+	transition: opacity var(--transition-speed);
+}
+
+.nav-links a:hover{
+	opacity: 0.7;
+}
+
+/* Menu toggle button*/
+
+.menu-toggle{
+	
+}
 
 /* ==========================================================================
    Layout Components
