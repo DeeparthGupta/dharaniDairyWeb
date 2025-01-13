@@ -227,6 +227,53 @@ section {
 /* ==========================================================================
    Contact Form Styles
    ========================================================================== */
+#mission-section{
+	position: relative;
+
+	/* defining an aspect ratio for the section*/
+	aspect-ratio: 16/9;
+	width: 100%;
+	
+	/* 2 Layer background for the tint effect */
+	background: 
+		linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+		url('../assets/photorealistic-view-cows-grazing-nature-outdoors.jpg') center/contain no-repeat;	
+
+	/* Using CSS grids for placement of items */
+	display: grid;
+	grid-template-columns: minmax(0,1fr);
+	place-items: center;
+	
+	padding: 5%;
+
+	/*Enables GPU acceleration */
+	will-change: transform;
+	backface-visibility: hidden;	
+
+	/*Text color for the entire section*/
+	color: var(--text-light);
+
+	overflow: hidden;
+
+}
+
+.mission-content{
+	width: min(90%,--container-width);
+	padding: 0 5%;
+	text-align: center;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mission-content p{
+	max-width: 65ch;
+	margin: 0 auto;
+	font-size: clamp(1.125rem, calc(1rem + 0.5vw), 1.5rem);
+	line-height: clamp(1.6, calc(1.6em + 0.2vw), 1.8);
+}
+
+/* ==========================================================================
+   Contact Form Styles
+   ========================================================================== */
 #contact-section h2 {
 	text-align: center;
 	margin-bottom: calc(var(--spacing-unit) * 2);
