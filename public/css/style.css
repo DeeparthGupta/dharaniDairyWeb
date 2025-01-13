@@ -61,13 +61,21 @@ header h1 {
    Layout Components
    ========================================================================== */
 section {
-	padding: calc(var(--spacing-unit) * 2) 0;
+	padding: clamp(1rem, 2vh, 3rem) clamp(1rem, 2vw, 3rem);
+	min-height: 100dvh;
+
+	display: grid;
+    place-content: center;
+    width: 100%;
 }
 
 .container {
-	max-width: var(--container-width);
-	margin: 0 auto;
-	padding: 0 var(--spacing-unit);
+    height: 100%;
+    display: grid;
+    place-items: center;
+    max-width: var(--container-width);
+    margin-inline: auto;
+    padding-inline: var(--spacing-unit);
 }
 
 /* Button Styles */
@@ -90,7 +98,7 @@ section {
 /* ==========================================================================
    Top Section
    ========================================================================== */
-   
+
 
 /* ==========================================================================
    Prices Section
@@ -98,33 +106,41 @@ section {
 #prices-section {
 	background-color: var(--primary-color);
 	color: var(--text-light);
+	padding-bottom: clamp(3rem, 10vh, 6rem);
 }
 
 #prices-section h2 {
 	text-align: center;
 	font-size: 5rem;
-	margin-bottom: calc(var(--spacing-unit) * 0.5);
+	margin-bottom: calc(var(--spacing-unit) * 0.1);
 }
 
 /* Products Grid Layout */
 .products-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: calc(var(--spacing-unit) * 2);
-	justify-items: center;
+	gap: clamp(2rem, 8vw, 5rem);
+	justify-content: center;
+	align-items: start;
+	width: 100%;
+	max-width: min(100%, var(--container-width));
+	margin-inline: auto	;
+	margin-top: calc(var(--spacing-unit) * -1);
 }
 
 /* Product Card Styling */
 .price-card {
 	text-align: center;
+	width: 100%;
 }
 
 .price-img {
-	width: 350px;
-	height: 350px;
+	width: 100%;
+	max-width: 1000px;
+	aspect-ratio: 1;
 	border-radius: 50%;
 	object-fit: cover;
-	margin-bottom: var(--spacing-unit);
+	margin: 0 auto calc(var(--spacing-unit) * 0.5)
 }
 
 /* ==========================================================================
@@ -238,8 +254,9 @@ section {
 	position: relative;
 
 	/* defining an aspect ratio for the section*/
-	aspect-ratio: 16/9;
-	width: 100%;
+	/* width: 100%;
+
+	min-height: min(100vh, 600px); */
 	
 	/* 2 Layer background for the tint effect */
 	background: 
@@ -247,11 +264,10 @@ section {
 		url('../assets/photorealistic-view-cows-grazing-nature-outdoors.jpg') center/cover no-repeat;	
 
 	/* Using CSS grids for placement of items */
-	display: grid;
-	grid-template-columns: minmax(0,1fr);
+/* 	display: grid;
 	place-items: center;
 	
-	padding: 5%;
+	padding: clamp(1rem, 5vh, 3rem) clamp(1rem, 5vw, 3rem); */
 
 	/*Enables GPU acceleration */
 	will-change: transform;
@@ -264,8 +280,10 @@ section {
 }
 
 .mission-content{
-	width: min(90%,--container-width);
-	padding: 0 5%;
+	width: min(90%,var(--container-width));
+	height: fit-content;
+	max-width: 65ch;
+	margin-inline: auto;
 	text-align: center;
 	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -275,6 +293,7 @@ section {
 	margin: 0 auto;
 	font-size: clamp(1.125rem, calc(1rem + 0.5vw), 1.5rem);
 	line-height: clamp(1.6, calc(1.6em + 0.2vw), 1.8);
+	padding-bottom: 5%;
 }
 
 /* ==========================================================================
@@ -349,6 +368,18 @@ section {
 	.circle-content{
 		font-size: clamp(0.5rem,3vw,1.5rem);
 	}
+}
+
+@media (min-aspect-ratio: 3/2) {
+    section {
+        /* For landscape/desktop views, ensure at least 80% height */
+        min-height: max(80vh, 600px);
+    }
+
+    /* Maintain proper spacing for content in landscape */
+    .container {
+        margin-block: clamp(2rem, 2vh, 4rem);
+    }
 }
 
 /*@media(orientation:landscape){
