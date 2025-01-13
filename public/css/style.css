@@ -21,7 +21,7 @@
 }
 
 html{
-	font-size: clamp(16px, 1.5vw, 20px);
+	font-size: clamp(20px, 1.5vw, 26px);
 }
 
 body {
@@ -43,10 +43,11 @@ body,html{
 /* ==========================================================================
    Header Styles
    ========================================================================== */
-header {
+/* header {
 	position: relative;
-	height: 30vh;
-	background: url('../assets/tea-cup.jpg') center/cover no-repeat;
+	min-height: 50vw;
+	max-height: 90vh;
+	background: url('../assets/') center/cover no-repeat;
 	display: grid;
 	place-items: center;
 }
@@ -54,7 +55,7 @@ header {
 header h1 {
 	color: var(--text-light);
 	text-align: center;
-}
+} */
 
 /* ==========================================================================
    Layout Components
@@ -87,6 +88,11 @@ section {
 }
 
 /* ==========================================================================
+   Top Section
+   ========================================================================== */
+   
+
+/* ==========================================================================
    Prices Section
    ========================================================================== */
 #prices-section {
@@ -97,14 +103,14 @@ section {
 #prices-section h2 {
 	text-align: center;
 	font-size: 5rem;
-	margin-bottom: calc(var(--spacing-unit) * 1);
+	margin-bottom: calc(var(--spacing-unit) * 0.5);
 }
 
 /* Products Grid Layout */
 .products-grid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	gap: calc(var(--spacing-unit) * 1);
+	gap: calc(var(--spacing-unit) * 2);
 	justify-items: center;
 }
 
@@ -114,8 +120,8 @@ section {
 }
 
 .price-img {
-	width: 250px;
-	height: 250px;
+	width: 350px;
+	height: 350px;
 	border-radius: 50%;
 	object-fit: cover;
 	margin-bottom: var(--spacing-unit);
@@ -226,7 +232,7 @@ section {
 }
 
 /* ==========================================================================
-   Contact Form Styles
+   Mission Section Styles
    ========================================================================== */
 #mission-section{
 	position: relative;
@@ -238,7 +244,7 @@ section {
 	/* 2 Layer background for the tint effect */
 	background: 
 		linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
-		url('../assets/photorealistic-view-cows-grazing-nature-outdoors.jpg') center/contain no-repeat;	
+		url('../assets/photorealistic-view-cows-grazing-nature-outdoors.jpg') center/cover no-repeat;	
 
 	/* Using CSS grids for placement of items */
 	display: grid;
@@ -255,7 +261,6 @@ section {
 	color: var(--text-light);
 
 	overflow: hidden;
-
 }
 
 .mission-content{
@@ -345,3 +350,35 @@ section {
 		font-size: clamp(0.5rem,3vw,1.5rem);
 	}
 }
+
+/*@media(orientation:landscape){
+	section{
+		min-height: 50vw;
+	}
+
+	#prices-section .container,
+	#about-section .container{
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		text-align: center;
+	}
+
+	#prices-section .price-card{
+		margin: 1rem;
+		flex: 1;
+		max-width: 300px;
+	}
+
+	#prices-section .price-img{
+		width: 100%;
+		height: 100%;
+		max-width: 500px;
+		max-height: 500px;
+		border-radius: 50%;
+		object-fit: cover;
+	}
+
+}*/
