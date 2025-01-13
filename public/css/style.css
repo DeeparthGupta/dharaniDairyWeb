@@ -2,123 +2,123 @@
    Global CSS Custom Properties
    ========================================================================== */
    :root {
-    --primary-color: #0d7f9a;
-    --primary-dark: #094061;
-    --text-light: #ffffff;
-    --off-white: #f5f5f5;
-    --spacing-unit: 1rem;
-    --container-width: 1200px;
-    --base-fonts: Arial, sans-serif, Roboto;
+	--primary-color: #0d7f9a;
+	--primary-dark: #094061;
+	--text-light: #ffffff;
+	--off-white: #f5f5f5;
+	--spacing-unit: 1rem;
+	--container-width: 1200px;
+	--base-fonts: Arial, sans-serif, Roboto;
 }
 
 /* ==========================================================================
    Base Styles & Reset
    ========================================================================== */
 *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 html{
-    font-size: clamp(16px, 1.5vw, 20px);
+	font-size: clamp(16px, 1.5vw, 20px);
 }
 
 body {
-    font-family: var(--base-fonts);
-    line-height: 1.6;
-    color: #333;
-    background-color: var(--off-white);
+	font-family: var(--base-fonts);
+	line-height: 1.6;
+	color: #333;
+	background-color: var(--off-white);
 }
 
 body,html{
-    overflow-y: scroll;
-    scrollbar-width: none;
+	overflow-y: scroll;
+	scrollbar-width: none;
 }
 
 ::-webkit-scrollbar{
-    display: none;
+	display: none;
 }
 
 /* ==========================================================================
    Header Styles
    ========================================================================== */
 header {
-    position: relative;
-    height: 30vh;
-    background: url('../assets/tea-cup.jpg') center/cover no-repeat;
-    display: grid;
-    place-items: center;
+	position: relative;
+	height: 30vh;
+	background: url('../assets/tea-cup.jpg') center/cover no-repeat;
+	display: grid;
+	place-items: center;
 }
 
 header h1 {
-    color: var(--text-light);
-    text-align: center;
+	color: var(--text-light);
+	text-align: center;
 }
 
 /* ==========================================================================
    Layout Components
    ========================================================================== */
 section {
-    padding: calc(var(--spacing-unit) * 2) 0;
+	padding: calc(var(--spacing-unit) * 2) 0;
 }
 
 .container {
-    max-width: var(--container-width);
-    margin: 0 auto;
-    padding: 0 var(--spacing-unit);
+	max-width: var(--container-width);
+	margin: 0 auto;
+	padding: 0 var(--spacing-unit);
 }
 
 /* Button Styles */
 .black-button {
-    width: 30%;
-    padding: 1rem 2rem;
-    background-color: #000;
-    color: var(--text-light);
-    border: none;
-    border-radius: 2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    font-size: 0.8rem;
+	width: 30%;
+	padding: 1rem 2rem;
+	background-color: #000;
+	color: var(--text-light);
+	border: none;
+	border-radius: 2rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	font-size: 0.8rem;
 }
 
 .black-button:hover {
-    background-color: var(--primary-color);
+	background-color: var(--primary-color);
 }
 
 /* ==========================================================================
    Prices Section
    ========================================================================== */
 #prices-section {
-    background-color: var(--primary-color);
-    color: var(--text-light);
+	background-color: var(--primary-color);
+	color: var(--text-light);
 }
 
 #prices-section h2 {
-    text-align: center;
-    font-size: 5rem;
-    margin-bottom: calc(var(--spacing-unit) * 0);
+	text-align: center;
+	font-size: 5rem;
+	margin-bottom: calc(var(--spacing-unit) * 1);
 }
 
 /* Products Grid Layout */
 .products-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: calc(var(--spacing-unit) * 1);
-    justify-items: center;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	gap: calc(var(--spacing-unit) * 1);
+	justify-items: center;
 }
 
 /* Product Card Styling */
 .price-card {
-    text-align: center;
+	text-align: center;
 }
 
 .price-img {
-    width: 250px;
-    height: 250px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: var(--spacing-unit);
+	width: 250px;
+	height: 250px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-bottom: var(--spacing-unit);
 }
 
 /* ==========================================================================
@@ -126,128 +126,170 @@ section {
    ========================================================================== */
 
 #promo-section{
-  padding: calc(var(--spacing-unit)*4) 0;
-  position: relative;
-  overflow: hidden;
-}
+	padding: calc(var(--spacing-unit)*4) 0;
+	position: relative;
+	overflow: hidden;
+	}
 
 /*CSS Grids container*/
 .promo-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap:calc(var(--spacing-unit)*4);
-  align-items: center;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap:calc(var(--spacing-unit)*4);
+	align-items: center;
 }
 
 .promo-image-area{
-  width: 100%;
-  position: relative;
+	width: 100%;
+	position: relative;
 }
 
 .promo-image{
   position: relative;
-  width: 100%;
-  padding-bottom: 100%;
-  border-radius: 50%;
-  overflow: hidden;
+	width: 100%;
+	padding-bottom: 100%;
+	border-radius: 50%;
+	overflow: hidden;
 }
 
 .promo-image img{
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
 }
 
 /*Text area styles*/
 .promo-text-area{
-  width: 100%;
-  padding: var(--spacing-unit);
-}
+	width: 100%;
+	padding: var(--spacing-unit);
+	}
 
 .promo-text-area h2{
-  font-size: clamp(1.8rem, 3vw, 2.5rem);
-  margin-bottom: calc(var(--spacing-unit)*1.5);
-  color: #000;
+	font-size: clamp(1.8rem, 3vw, 2.5rem);
+	margin-bottom: calc(var(--spacing-unit)*1.5);
+	color: #000;
 }
 
 .promo-text-area p{
-  font-size: 1.1rem;
-  line-height: 1.6rem;
-  color: #666;
-  margin-bottom: calc(var(--spacing-unit)*2);
+	font-size: 1.1rem;
+	line-height: 1.6rem;
+	color: #666;
+	margin-bottom: calc(var(--spacing-unit)*2);
 }
 
 .promo-button{
-    width: 40%;
+	width: 40%;
+}
+
+/* ==========================================================================
+   About Section Styles
+   ========================================================================== */
+#about-section{
+	background-color: var(--primary-color);
+	color: var(--text-light);
+}
+
+#about-section h2{
+	text-align: center;
+	font-size: 2rem;
+	margin-bottom: calc(var(--spacing-unit) * 1);
+}
+
+.circle-grid{
+	display: grid;
+	grid-template-columns: repeat(3,1fr);
+	margin: 0 auto;
+	max-width: 33vw;
+	gap: calc(var(--spacing-unit)*2);
+	max-width: var(--container-width);
+}
+
+.circle{
+	width: min(20vw, 200px);
+	height: min(20vw, 200px);
+	border: 3px solid var(--text-light);
+	border-radius: 50%;
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.circle-content{
+	color: var(--text-light);
+	font-size: clamp(1rem,3vw,2rem);
+	text-align: center;
+	padding: var(--spacing-unit);
+	text-transform: uppercase;
 }
 
 /* ==========================================================================
    Contact Form Styles
    ========================================================================== */
 #contact-section h2 {
-    text-align: center;
-    margin-bottom: calc(var(--spacing-unit) * 2);
+	text-align: center;
+	margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
 #contact-form {
-    max-width: 500px;
-    margin: 0 auto;
+	max-width: 500px;
+	margin: 0 auto;
 }
 
 /* Form Elements */
 .form-group {
-    margin-bottom: var(--spacing-unit);
+	margin-bottom: var(--spacing-unit);
 }
 
 .form-group input,
 .form-group textarea {
-    width: 100%;
-    padding: calc(var(--spacing-unit) * 0.75);
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
-    font-family: var(--base-fonts);
+	width: 100%;
+	padding: calc(var(--spacing-unit) * 0.75);
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-size: 1rem;
+	font-family: var(--base-fonts);
 }
 
 .form-group textarea {
-    min-height: 150px;
-    resize: vertical;
+	min-height: 150px;
+	resize: vertical;
 }
 
 .form-message {
-    text-align: center;
-    margin-top: var(--spacing-unit);
+	text-align: center;
+	margin-top: var(--spacing-unit);
 }
 
 /* ==========================================================================
    Media Queries
    ========================================================================== */
 @media (max-width: 768px) {
-    .price-img {
-        width: 150px;
-        height: 150px;
-    }
-    
-    .form-group input,
-    .form-group textarea,
-    button {
-        padding: calc(var(--spacing-unit) * 0.5);
-    }
+	.price-img {
+		width: 150px;
+		height: 150px;
+	}
+	
+	.form-group input,
+	.form-group textarea,
+	button {
+		padding: calc(var(--spacing-unit) * 0.5);
+	}
 
-    .promo-grid{
-      /*Stack columns on smaller screens*/
-      grid-template-columns: 1fr;
-      gap: calc(var(--spacing-unit)*2);
-    }
+	.promo-grid{
+	  /*Stack columns on smaller screens*/
+	  grid-template-columns: 1fr;
+	  gap: calc(var(--spacing-unit)*2);
+	}
 
-    .promo-image-area{
-      /*Center and limit image width on smaller screens*/
-      width: 80%;
-      margin: 0 auto;
-    }
+	.promo-image-area{
+	  /*Center and limit image width on smaller screens*/
+	  width: 80%;
+	  margin: 0 auto;
+	}
 
-    .promo-text-area{
-      text-align: center;
-    }
+	.promo-text-area{
+	  text-align: center;
+	}
 }
