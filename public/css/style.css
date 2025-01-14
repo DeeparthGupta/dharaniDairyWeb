@@ -165,6 +165,7 @@ section {
 				url('../assets/milk-concept.jpg') center/cover no-repeat;
 	display: grid;
 	place-items: center;
+	position: relative;
 }
 
 .home-content{
@@ -175,9 +176,12 @@ section {
 	justify-self: center;
 }
 
-.home-content h2{
+.home-content h1{
 	font-size: clamp(2rem, 8vw, 5rem);
 	margin-bottom: clamp(1rem, 3vh, 2rem);
+	font-size: clamp(1.8rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    max-width: 15ch; /* Control line breaks */
 }
 
 .home-content p{
@@ -537,16 +541,54 @@ section {
     }
 }
 
-@media (max-width: 1023px), (max-aspect-ratio: 16/10) {
+/* 1366x768 and larger landscape screens */
+@media screen and (min-width: 1366px) and (orientation: landscape) {
+    #home-section {
+        display: block;
+    }
+
+    .home-content {
+        position: absolute;
+        bottom: 3rem;    /* Distance from bottom */
+        left: 3rem;      /* Distance from left */
+        text-align: left;
+        width: 40%;
+        padding: 0;
+    }
+
+    .home-content h1 {
+        margin-left: 0;
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .home-content p {
+        margin-left: 0;
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .cta-button {
+        margin-right: auto;
+        margin-left: 0;
+    }
+}
+
+/* Smaller than 1366px or portrait - centered content */
+@media screen and (max-width: 1365px), (orientation: portrait) {
     #home-section {
         place-items: center;
     }
 
     .home-content {
         text-align: center;
-        justify-self: center;
+        position: static;
     }
-}
+    
+    .home-content h1 {
+        margin-inline: auto;
+    }
+}	
 
 /*@media(orientation:landscape){
 	section{
