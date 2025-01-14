@@ -48,7 +48,7 @@ body,html{
    ========================================================================== */
 section {
 	scroll-margin-top: var(--nav-height);
-	padding: clamp(1rem, 2vh, 3rem) clamp(1rem, 2vw, 3rem);
+	padding: clamp(0.5rem, 1vh, 1.5rem) clamp(1rem, 2vw, 3rem);
 	min-height: 100dvh;
 
 	display: grid;
@@ -171,10 +171,11 @@ section {
 	text-align: center;
 	padding-top: var(--container-padding);
 	color: var(--text-light);
-	max-width: min(100% - 2rem, 800px);
+	width: min(100% - 2rem, 800px);
+	justify-self: center;
 }
 
-.home-content h1{
+.home-content h2{
 	font-size: clamp(2rem, 8vw, 5rem);
 	margin-bottom: clamp(1rem, 3vh, 2rem);
 }
@@ -182,6 +183,8 @@ section {
 .home-content p{
 	font-size: clamp(1rem, 3vw, 1.5rem);
     margin-bottom: clamp(2rem, 5vh, 3rem);
+	max-width: 60ch;
+	margin-inline: auto;
 }
 
 .cta-button{
@@ -530,7 +533,18 @@ section {
 
     /* Maintain proper spacing for content in landscape */
     .container {
-        margin-block: clamp(2rem, 2vh, 4rem);
+        margin-block: clamp(1rem, 1.5vh, 2rem);
+    }
+}
+
+@media (max-width: 1023px), (max-aspect-ratio: 16/10) {
+    #home-section {
+        place-items: center;
+    }
+
+    .home-content {
+        text-align: center;
+        justify-self: center;
     }
 }
 
