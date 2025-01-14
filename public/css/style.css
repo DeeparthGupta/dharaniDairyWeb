@@ -118,6 +118,11 @@ section {
     font-weight: bolder; /* Made text bold */
 }
 
+.nav-logo,
+.brand-text{
+	cursor: pointer;
+}
+
 .nav-container {
     width: 100%;
 	height: 100%;

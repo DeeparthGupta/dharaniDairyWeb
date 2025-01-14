@@ -1,14 +1,41 @@
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Menu Toggle Functionality
-  const menuToggle = document.querySelector('.menu-toggle');
-  const navLinks = document.querySelector('.nav-links');
+const menuToggle = document.querySelector('.menu-toggle');
+const navLinks = document.querySelector('.nav-links');
+const logoContainer = document.querySelector('.logo-container');
 
-  if (menuToggle && navLinks) {
-      menuToggle.addEventListener('click', function() {
-          navLinks.classList.toggle('active');
-          this.classList.toggle('active');
-      });
+if(logoContainer){
+	const logo = document.querySelector('.nav-logo');
+	const brandText = document.querySelector('.brand-text');		
+	
+	const scrollToHome = (e) => {
+		e.preventDefault();
+		const homeSection = document.querySelector('#home-section');
+		if(homeSection){
+			homeSection.scrollIntoView({
+				behavior:'smooth',
+				block: 'start'
+			});
+		}
+	};
+
+	//Add click event listeners
+	if(logo){
+		logo.addEventListener('click', scrollToHome);
+	}
+
+	if(brandText){
+		brandText.addEventListener('click', scrollToHome);
+	}
+}
+
+
+if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', function() {
+        navLinks.classList.toggle('active');
+        this.classList.toggle('active');
+    });
 
       // Close menu when clicking outside
       document.addEventListener('click', function(e) {
