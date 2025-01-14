@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
             e.stopPropagation();
             navLinks.classList.toggle('active');
             this.classList.toggle('active');
-            return false;
         });
 
         // Close menu when clicking outside
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     block: 'start'
                 });
             }
-            return false;
         };
 
         // Prevent unwanted scroll behavior on logo container
