@@ -44,6 +44,45 @@ body,html{
 }
 
 /* ==========================================================================
+   Layout Components
+   ========================================================================== */
+section {
+	scroll-margin-top: var(--nav-height);
+	padding: clamp(1rem, 2vh, 3rem) clamp(1rem, 2vw, 3rem);
+	min-height: 100dvh;
+
+	display: grid;
+    place-content: center;
+    width: 100%;
+}
+
+.container {
+    height: 100%;
+    display: grid;
+    place-items: center;
+    max-width: var(--container-width);
+    margin-inline: auto;
+    padding-inline: var(--spacing-unit);
+}
+
+/* Button Styles */
+.black-button {
+	width: 60%;
+	padding: 0.7rem 1.5rem;
+	background-color: #000;
+	color: var(--text-light);
+	border: none;
+	border-radius: 2rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	font-size: 0.8rem;
+}
+
+.black-button:hover {
+	background-color: var(--primary-color);
+}
+
+/* ==========================================================================
    Nav Styles
    ========================================================================== */
 .top-nav{
@@ -116,46 +155,56 @@ body,html{
 }
 
 /* ==========================================================================
-   Layout Components
+   Intro page Styles
    ========================================================================== */
-section {
-	padding: clamp(1rem, 2vh, 3rem) clamp(1rem, 2vw, 3rem);
+
+#home-section{
 	min-height: 100dvh;
-
+	padding-top: var(--nav-height);
+	background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+				url('../assets/milk-concept.jpg') center/cover no-repeat;
 	display: grid;
-    place-content: center;
-    width: 100%;
+	place-items: center;
 }
 
-.container {
-    height: 100%;
-    display: grid;
-    place-items: center;
-    max-width: var(--container-width);
-    margin-inline: auto;
-    padding-inline: var(--spacing-unit);
+.home-content{
+	text-align: center;
+	padding-top: var(--container-padding);
+	color: var(--text-light);
+	max-width: min(100% - 2rem, 800px);
 }
 
-/* Button Styles */
-.black-button {
-	width: 30%;
-	padding: 1rem 2rem;
-	background-color: #000;
+.home-content h1{
+	font-size: clamp(2rem, 8vw, 5rem);
+	margin-bottom: clamp(1rem, 3vh, 2rem);
+}
+
+.home-content p{
+	font-size: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: clamp(2rem, 5vh, 3rem);
+}
+
+.cta-button{
+	display: inline-block;
+	padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1.5rem, 4vw, 2.5rem);
+	background-color: var(--primary-color);
 	color: var(--text-light);
 	border: none;
-	border-radius: 2rem;
+	border-radius: 5px;
 	cursor: pointer;
-	transition: background-color 0.3s ease;
-	font-size: 0.8rem;
+	font-size: inherit;
+	font-family: inherit;
+	transition: transform var(--transition-speed);
 }
 
-.black-button:hover {
-	background-color: var(--primary-color);
+.cta-button:hover{
+	transition: translateY(-2px);
 }
 
-/* ==========================================================================
-   Top Section
-   ========================================================================== */
+.cta-button:focus{
+	outline: 2px solid var(--text-light);
+	outline-offset: 2px;
+}
 
 
 /* ==========================================================================
@@ -363,7 +412,8 @@ section {
 }
 
 #contact-form {
-	max-width: 500px;
+	max-width: min(800px,90%);
+	width: 100%;
 	margin: 0 auto;
 }
 
@@ -378,7 +428,7 @@ section {
 	padding: calc(var(--spacing-unit) * 0.75);
 	border: 1px solid #ddd;
 	border-radius: 4px;
-	font-size: 1rem;
+	font-size: clamp(1rem, 1.5vw, 1.2rem);
 	font-family: var(--base-fonts);
 }
 
@@ -400,11 +450,15 @@ section {
 		width: 150px;
 		height: 150px;
 	}
+
+	#contact-form{
+		padding: calc(var(--spacing-unit) * 2);
+	}
 	
 	.form-group input,
 	.form-group textarea,
 	button {
-		padding: calc(var(--spacing-unit) * 0.5);
+		padding: var(--spacing-unit);
 	}
 
 	.promo-grid{
