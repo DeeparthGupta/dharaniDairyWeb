@@ -50,7 +50,7 @@ body,html{
 section {
 	scroll-margin-top: var(--nav-height);
 	padding: clamp(0.5rem, 1vh, 1.5rem) clamp(1rem, 2vw, 3rem);
-	min-height: 100dvh;
+	min-height: 50dvh;
 
 	display: grid;
     place-content: center;
@@ -68,7 +68,6 @@ section {
 
 /* Button Styles */
 .black-button {
-	width: 60%;
 	padding: 0.7rem 1.5rem;
 	background-color: #000;
 	color: var(--text-light);
@@ -76,7 +75,7 @@ section {
 	border-radius: 2rem;
 	cursor: pointer;
 	transition: background-color 0.3s ease;
-	font-size: 0.8rem;
+	font-size: 0.7rem;
 }
 
 .black-button:hover {
@@ -343,10 +342,6 @@ section {
 	margin-bottom: calc(var(--spacing-unit)*2);
 }
 
-.promo-button{
-	width: 40%;
-}
-
 /* ==========================================================================
    About Section Styles
    ========================================================================== */
@@ -358,14 +353,14 @@ section {
 #about-section h2{
 	text-align: center;
 	font-size: 2rem;
-	margin-bottom: calc(var(--spacing-unit) * 1);
+	max-width: 100%;
+	margin-bottom: calc(var(--spacing-unit) * 1.5);
 }
 
 .circle-grid{
 	display: grid;
 	grid-template-columns: repeat(3,1fr);
-	margin: 0 auto;
-	max-width: 33vw;
+	max-width: 100%;
 	gap: calc(var(--spacing-unit)*2);
 }
 
@@ -388,6 +383,11 @@ section {
 	text-transform: uppercase;
 	font-weight: bolder;
 }
+
+#about-section .black-button {
+    width: clamp(250px, 35vw, 400px);  /* Specific to about section's black button */
+}
+
 
 /* ==========================================================================
    Mission Section Styles
@@ -441,13 +441,13 @@ section {
 /* ==========================================================================
    Contact Form Styles
    ========================================================================== */
+
 #contact-section h2 {
 	text-align: center;
 	margin-bottom: calc(var(--spacing-unit) * 2);
 }
 
 #contact-form {
-	max-width: min(800px,90%);
 	width: 100%;
 	margin: 0 auto;
 }
@@ -459,7 +459,7 @@ section {
 
 .form-group input,
 .form-group textarea {
-	width: 100%;
+	width: clamp(300px, 75vw, 800px);
 	padding: calc(var(--spacing-unit) * 0.75);
 	border: 1px solid #ddd;
 	border-radius: 4px;
@@ -494,10 +494,6 @@ section {
 	.price-img {
 		width: 150px;
 		height: 150px;
-	}
-
-	#contact-form{
-		padding: calc(var(--spacing-unit) * 2);
 	}
 	
 	.form-group input,

@@ -1,10 +1,14 @@
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Loaded');
     // Initialize all interactive elements
     const menuToggle = document.querySelector('.menu-toggle');
     const navLinks = document.querySelector('.nav-links');
     const logoContainer = document.querySelector('.logo-container');
     const topNav = document.querySelector('.top-nav');
+    const promoButton = document.getElementById('.promo-button');
+    console.log('Promo Button found', promoButton);
+    const navMenuLinks = document.querySelectorAll('.nav-links a[href^="#"]');
 
     // Menu Toggle Functionality
     if (menuToggle && navLinks) {
@@ -30,6 +34,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 navLinks.classList.remove('active');
                 menuToggle.classList.remove('active');
             });
+        });
+    }
+
+    if(promoButton){
+        promoButton.addEventListener('click', (e) => {
+            console.log('Promo button clicked');
+            e.preventDefault();
+            e.stopPropagation();
+            const contactSection = document.querySelector('#contact-section');
+            console.log('Contact section found');
+            if(contactSection){
+                console.log('Attempting to scroll...')
+                contactSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
         });
     }
 
@@ -79,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Handle smooth scrolling for navigation menu links
-    const navMenuLinks = document.querySelectorAll('.nav-links a[href^="#"]');
     navMenuLinks.forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.stopPropagation();
