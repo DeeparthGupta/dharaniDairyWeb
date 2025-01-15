@@ -16,8 +16,8 @@ app.use(express.static('public')); // Serve static files from the public directo
 const db = mysql.createConnection({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD, // Replace with your MySQL password
-  database: process.env.MYSQL_DATABASE  // Replace with your database name
+  password: process.env.MYSQL_PASSWORD, 
+  database: process.env.MYSQL_DATABASE
 });
 
 db.connect((err) => {
@@ -32,7 +32,7 @@ db.connect((err) => {
 app.post('/submit-form', (req, res) => {
   const { name, email, phone, message } = req.body;
 
-  const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?)';
+  const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?, ?)';
   db.query(query, [name, email, phone, message], (err, result) => {
     if (err) {
       console.error('Error inserting data:', err);
