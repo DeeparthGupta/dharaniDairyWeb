@@ -93,16 +93,16 @@ const validateFormInput = (req, res, next) => {
       return res.status(400).json({
         error: 'Either email or phone number is required'
       });
-
+    }
       // Validate email if exists
-      if(email){
-        if(!validator.isEmail(email)){
-          return res.status(400).json({
-            error: 'Invalid email address'
-          });
-        }
+    if(email){
+      if(!validator.isEmail(email)){
+        return res.status(400).json({
+          error: 'Invalid email address'
+        });
       }
     }
+    
 
     // Validate phone if given
     if(phone){
@@ -152,15 +152,10 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
 
       logger.info('Form Submitted', {id: result.insertId});
       res.json({
-        message: 'Form submited successfully',
+        message: 'Form submitted successfully',
         id: result.insertId,
         hasEmail: !!email,
         hasPhone: !!phone
-      });
-
-      res.json({
-        message: 'Form submitted successfully',
-        id: result.insertId
       });
 
     }
