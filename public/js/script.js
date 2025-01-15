@@ -153,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => {
                 console.log('Response status:', response.status); // Debug log
                 if (!response.ok) {
-                    throw new Error(`Server responded with ${response.status}: ${text}`);
+                    throw new Error(`Server responded with ${response.status}`);
                 }
                 return response.text();
             })

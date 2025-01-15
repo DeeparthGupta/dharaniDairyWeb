@@ -44,7 +44,7 @@ app.use(express.urlencoded({ extended: true }));  // for parsing application/x-w
 app.use(express.static('public'));
 
 // Only log errors and significaant events
-app.use((req, res, nest) => {
+app.use((req, res, next) => {
   // Log only POST reqs and errors
   if(req.method === 'POST' ||res.statusCode >= 400){
     logger.info('Request',{
