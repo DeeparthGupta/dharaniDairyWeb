@@ -130,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
+            console.log('Form submission started'); // Debug log
 
             // Get form values
             const formData = {
@@ -139,8 +140,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 message: document.getElementById('message').value
             };
 
+            console.log('Form data:', formData); // Debug log
+
             // Send data to backend
-            fetch('/submit-form', {
+            fetch('http://localhost:5000/submit-form', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -148,19 +151,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(formData)
             })
             .then(response => {
+                console.log('Response status:', response.status); // Debug log
                 if (!response.ok) {
-                    throw new Error('Network response was not ok');
+                    throw new Error(`Server responded with ${response.status}: ${text}`);
                 }
                 return response.text();
             })
             .then(data => {
+                console.log('Success:', data); // Debug log
                 document.getElementById('form-response').textContent = data;
                 contactForm.reset();
             })
             .catch(error => {
                 console.error('Error:', error);
-                document.getElementById('form-response').textContent = 
-                    'An error has occurred. Please try again later.';
+                document.getElementById('form-response').textContent ='Error submitting form: ' + error.message;
             });
         });
     }
