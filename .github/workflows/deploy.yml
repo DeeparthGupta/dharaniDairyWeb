@@ -16,16 +16,19 @@ jobs:
           host: ${{ secrets.SERVER_IP }}
           username: opc
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+          script: |            
+            # Switch to bash explicitly
+            export SHELL=/bin/bash
+            
             cd /var/www/dharaniWeb
             
             # Install PM2 locally if not present
-            if not test -e node_modules/pm2
+            if [ ! -e node_modules/pm2 ]; then
                 npm install pm2 --save
-            end
+            fi
             
             # Create ecosystem.config.js if it doesn't exist
-            if not test -e ecosystem.config.js
+            if [ ! -e ecosystem.config.js ]; then
                 echo 'module.exports = {
                   apps: [{
                     name: "dharaniWeb",
@@ -38,21 +41,21 @@ jobs:
                     max_memory_restart: "500M"
                   }]
                 }' > ecosystem.config.js
-            end
+            fi
             
             git pull origin master
             
-            if test -e package.json
+            if [ -e package.json ]; then
                 npm install
-            end
+            fi
             
             # Use the local PM2 from node_modules
-            if ./node_modules/.bin/pm2 list | grep -q "dharaniWeb"
+            if ./node_modules/.bin/pm2 list | grep -q "dharaniWeb"; then
                 ./node_modules/.bin/pm2 restart ecosystem.config.js
             else
                 ./node_modules/.bin/pm2 start ecosystem.config.js
                 ./node_modules/.bin/pm2 save
-            end
+            fi
             
-            # Check nginx config before restarting
-            sudo nginx -t && sudo systemctl restart nginx || (echo "Nginx failed to restart. Checking logs..." && sudo journalctl -xe -u nginx.service)
+            # Check nginx config before restarting using Oracle Linux systemd commands
+            sudo nginx -t && sudo systemctl restart nginx.service || (echo "Nginx failed to restart. Checking logs..." && sudo journalctl -xe --unit=nginx.service)
