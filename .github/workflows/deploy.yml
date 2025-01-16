@@ -2,7 +2,7 @@ name: Deploy to Oracle Cloud
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
 
 jobs:
   deploy:
@@ -35,7 +35,7 @@ jobs:
                 }' > ecosystem.config.js
             end
             
-            git pull origin main
+            git pull origin master
             
             if test -e package.json
                 npm install
