@@ -1,0 +1,52 @@
+name: Deploy to Oracle Cloud
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Deploy to server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SERVER_IP }}
+          username: opc
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /var/www/dharaniDairyWeb
+            
+            # Create ecosystem.config.js if it doesn't exist
+            if not test -e ecosystem.config.js
+                echo 'module.exports = {
+                  apps: [{
+                    name: "dharaniDairy",
+                    script: "./server.js",
+                    watch: true,
+                    env: {
+                      NODE_ENV: "production",
+                      PORT: 5000
+                    },
+                    max_memory_restart: "500M"
+                  }]
+                }' > ecosystem.config.js
+            end
+            
+            git pull origin main
+            
+            if test -e package.json
+                npm install
+            end
+            
+            # Use the ecosystem file
+            if pm2 list | grep -q "dharaniDairy"
+                pm2 restart ecosystem.config.js
+            else
+                pm2 start ecosystem.config.js
+                pm2 save
+            end
+            
+            sudo systemctl restart nginx
