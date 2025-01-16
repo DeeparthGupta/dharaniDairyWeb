@@ -19,6 +19,11 @@ jobs:
           script: |
             cd /var/www/dharaniWeb
             
+            # Install PM2 locally if not present
+            if not test -e node_modules/pm2
+                npm install pm2 --save
+            end
+            
             # Create ecosystem.config.js if it doesn't exist
             if not test -e ecosystem.config.js
                 echo 'module.exports = {
@@ -41,12 +46,13 @@ jobs:
                 npm install
             end
             
-            # Use the ecosystem file
-            if pm2 list | grep -q "dharaniWeb"
-                pm2 restart ecosystem.config.js
+            # Use the local PM2 from node_modules
+            if ./node_modules/.bin/pm2 list | grep -q "dharaniWeb"
+                ./node_modules/.bin/pm2 restart ecosystem.config.js
             else
-                pm2 start ecosystem.config.js
-                pm2 save
+                ./node_modules/.bin/pm2 start ecosystem.config.js
+                ./node_modules/.bin/pm2 save
             end
             
-            sudo systemctl restart nginx
+            # Check nginx config before restarting
+            sudo nginx -t && sudo systemctl restart nginx || (echo "Nginx failed to restart. Checking logs..." && sudo journalctl -xe -u nginx.service)
