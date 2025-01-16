@@ -17,7 +17,7 @@ jobs:
           username: opc
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/dharaniDairyWeb
+            cd /var/www/dharaniWeb
             
             # Create ecosystem.config.js if it doesn't exist
             if not test -e ecosystem.config.js
