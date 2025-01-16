@@ -23,7 +23,7 @@ jobs:
             if not test -e ecosystem.config.js
                 echo 'module.exports = {
                   apps: [{
-                    name: "dharaniDairy",
+                    name: "dharaniWen",
                     script: "./server.js",
                     watch: true,
                     env: {
@@ -42,7 +42,7 @@ jobs:
             end
             
             # Use the ecosystem file
-            if pm2 list | grep -q "dharaniDairy"
+            if pm2 list | grep -q "dharaniWeb"
                 pm2 restart ecosystem.config.js
             else
                 pm2 start ecosystem.config.js
