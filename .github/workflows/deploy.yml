@@ -23,7 +23,7 @@ jobs:
             if not test -e ecosystem.config.js
                 echo 'module.exports = {
                   apps: [{
-                    name: "dharaniWen",
+                    name: "dharaniWeb",
                     script: "./server.js",
                     watch: true,
                     env: {
