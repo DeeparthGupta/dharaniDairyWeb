@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: "dharaniDairy",          // Application name
+    name: "dharaniWeb",          // Application name
     script: "./server.js",         // Server
     watch: true,                   // Watch for file changes
     env: {
