@@ -1,0 +1,102 @@
+#home-section{
+	min-height: 100dvh;
+	padding-top: var(--nav-height);
+	background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+				url('../../assets/milk-concept.jpg') center/cover no-repeat;
+	display: grid;
+	place-items: center;
+	position: relative;
+}
+
+.home-content{
+	text-align: center;
+	padding-top: var(--container-padding);
+	color: var(--text-light);
+	width: min(100% - 2rem, 800px);
+	justify-self: center;
+}
+
+.home-content h1{
+	margin-bottom: clamp(1rem, 3vh, 2rem);
+	font-size: clamp(1.8rem, 5vw, 3.5rem);
+    line-height: 1.2;
+    max-width: 15ch; /* Control line breaks */
+}
+
+.home-content p{
+	font-size: clamp(1rem, 3vw, 1.5rem);
+    margin-bottom: clamp(2rem, 5vh, 3rem);
+	max-width: 60ch;
+	margin-inline: auto;
+}
+
+.cta-button{
+	display: inline-block;
+	padding: clamp(0.8rem, 2vw, 1.2rem) clamp(1.5rem, 4vw, 2.5rem);
+	background-color: var(--primary-color);
+	color: var(--text-light);
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: inherit;
+	font-family: inherit;
+	transition: transform var(--transition-speed);
+}
+
+.cta-button:hover{
+	transform: translateY(-2px);
+}
+
+.cta-button:focus{
+	outline: 2px solid var(--text-light);
+	outline-offset: 2px;
+}
+
+/* 1366x768 and larger landscape screens */
+@media screen and (min-width: 1366px) and (orientation: landscape) {
+    #home-section {
+        display: block;
+    }
+
+    .home-content {
+        position: absolute;
+        bottom: 3rem;    /* Distance from bottom */
+        left: 3rem;      /* Distance from left */
+        text-align: left;
+        width: 40%;
+        padding: 0;
+    }
+
+    .home-content h1 {
+        margin-left: 0;
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .home-content p {
+        margin-left: 0;
+        margin-right: auto;
+        text-align: left;
+    }
+
+    .cta-button {
+        margin-right: auto;
+        margin-left: 0;
+    }
+}
+
+/* Smaller than 1366px or portrait - centered content */
+@media screen and (max-width: 1365px), (orientation: portrait) {
+    #home-section {
+        place-items: center;
+    }
+
+    .home-content {
+        text-align: center;
+        position: static;
+    }
+    
+    .home-content h1 {
+        margin-inline: auto;
+    }
+}

@@ -1,0 +1,14 @@
+.black-button {
+	padding: 0.7rem 1.5rem;
+	background-color: #000;
+	color: var(--text-light);
+	border: none;
+	border-radius: 2rem;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	font-size: 0.7rem;
+}
+
+.black-button:hover {
+	background-color: var(--primary-color);
+}
