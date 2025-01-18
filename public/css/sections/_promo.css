@@ -1,0 +1,75 @@
+/* ==========================================================================
+   Promo Section Styles
+   ========================================================================== */
+
+#promo-section{
+	padding: calc(var(--spacing-unit)*4) 0;
+	position: relative;
+	overflow: hidden;
+}
+
+/*CSS Grids container*/
+.promo-grid{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap:calc(var(--spacing-unit)*4);
+	align-items: center;
+}
+
+.promo-image-area{
+	width: 100%;
+	position: relative;
+}
+
+.promo-image{
+  position: relative;
+	width: 100%;
+	padding-bottom: 100%;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.promo-image img{
+  	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/*Text area styles*/
+.promo-text-area{
+	width: 100%;
+	padding: var(--spacing-unit);
+	}
+
+.promo-text-area h2{
+	font-size: clamp(1.8rem, 3vw, 2.5rem);
+	margin-bottom: calc(var(--spacing-unit)*1.5);
+	color: #000;
+}
+
+.promo-text-area p{
+	font-size: 1.1rem;
+	line-height: 1.6rem;
+	color: #666;
+	margin-bottom: calc(var(--spacing-unit)*2);
+}
+
+@media(max-with: 768px){
+	.promo-grid{
+	/* Stack columns on smaller screens */
+		grid-template-columns: 1fr;
+		gap: calc(var(--spacing-unit)*2);
+	}
+  
+	.promo-image-area{
+	/* Center and limit image width on smaller screens */
+		width: 80%;
+		margin: 0 auto;
+	}
+  
+	.promo-text-area{
+		text-align: center;
+	}
+  
+}
