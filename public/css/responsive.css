@@ -1,0 +1,8 @@
+@media (min-aspect-ratio: 3/2) {
+    section {
+        min-height: max(80vh, 600px);
+    }
+    .container {
+        margin-block: clamp(1rem, 1.5vh, 2rem);
+    }
+}

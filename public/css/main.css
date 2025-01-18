@@ -1,0 +1,21 @@
+/* ==========================================================================
+   Imports
+   ========================================================================== */
+
+@import 'base/_variables.css';
+@import 'base/_reset.css';
+@import 'base/_typography.css';
+@import 'components/_buttons.css';
+@import 'components/_navigation.css';
+@import 'layouts/_layout.css';
+
+/* Import the css of each section*/
+@import 'sections/_heroSec.css';
+@import 'sections/_form.css';
+@import 'sections/_prices.css';
+@import 'sections/_promo.css';
+@import 'sections/_about.css';
+@import 'sections/_mission.css';
+
+/* Import responsive design related code */
+@import 'responsive.css';
