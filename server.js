@@ -171,20 +171,6 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
         error: 'Could not save your submission due to an error.'
       });
     }
-    
-    /* db.query(query, [name, email, phone, message], (err, result) => {
-        if (err) {
-            console.error('Database error:', err);
-            return res.status(500).json({ 
-                error: 'Database error', 
-                details: err.message 
-            });
-        }
-        res.json({ 
-            message: 'Form submitted successfully!',
-            id: result.insertId 
-        });
-    }); */
 });
 
 // Error handling middleware
