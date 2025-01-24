@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Use a build argument to set the port via the environment variable
-# ARG PORT=5000
+ARG PORT=5000
 ENV PORT=${PORT}
 
 EXPOSE ${PORT}
