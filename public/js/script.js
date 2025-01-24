@@ -168,7 +168,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					.then(response => {
 							console.log('Response status:', response.status);
 							if (!response.ok) {
-									throw new Error(`Server responded with ${response.status}`);
+								return response.json.then(err => {
+									throw new Error(err.error || `Server responded with ${response.status}`);
+								});
 							}
 							return response.json();
 					})
