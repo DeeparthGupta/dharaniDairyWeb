@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     const logoContainer = document.querySelector('.logo-container');
     const topNav = document.querySelector('.top-nav');
-    const promoButton = document.getElementById('.promo-button');
+    const promoButton = document.getElementById('promo-button');
     const navMenuLinks = document.querySelectorAll('.nav-links a[href^="#"]');
 
     // Menu Toggle Functionality
@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(config =>{
                 /* Get the submit URL from the server */
-                const backendUrl = config.backendUrl;
+                const backendURL = config.backendURL;
 
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault();
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('Form data:', formData); // Debug log
         
                     // Send data to backend
-                    fetch(backendUrl, {
+                    fetch(backendURL, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
