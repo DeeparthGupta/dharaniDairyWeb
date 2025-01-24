@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelector('.nav-links');
     const logoContainer = document.querySelector('.logo-container');
     const topNav = document.querySelector('.top-nav');
-    const promoButton = document.getElementById('.promo-button');
+    const promoButton = document.getElementById('promo-button');
     const navMenuLinks = document.querySelectorAll('.nav-links a[href^="#"]');
 
     // Menu Toggle Functionality
@@ -128,55 +128,60 @@ document.addEventListener('DOMContentLoaded', function() {
     // Contact Form Handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        fetch('/config.json')
-        .then(response => response.json())
-        .then(config =>{
-            /* Get the submit URL from config.json */
-            const backendUrl = config.backendUrl.replace('${PORT}', process.env.PORT || 5000);
+        fetch('/config')
+            .then(response => {
+                if(!response.ok){
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(config =>{
+                /* Get the submit URL from the server */
+                const backendURL = config.backendURL;
 
-            contactForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                console.log('Form submission started'); // Debug log
-    
-                // Get form values
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value,
-                    message: document.getElementById('message').value
-                };
-    
-                console.log('Form data:', formData); // Debug log
-    
-                // Send data to backend
-                fetch(backendUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(formData)
-                })
-                .then(response => {
-                    console.log('Response status:', response.status); // Debug log
-                    if (!response.ok) {
-                        throw new Error(`Server responded with ${response.status}`);
-                    }
-                    return response.text();
-                })
-                .then(data => {
-                    console.log('Success:', data); // Debug log
-                    document.getElementById('form-response').textContent = data;
-                    contactForm.reset();
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('form-response').textContent ='Error submitting form: ' + error.message;
-                });
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('Form submission started'); // Debug log
+        
+                    // Get form values
+                    const formData = {
+                        name: document.getElementById('name').value,
+                        email: document.getElementById('email').value,
+                        phone: document.getElementById('phone').value,
+                        message: document.getElementById('message').value
+                    };
+        
+                    console.log('Form data:', formData); // Debug log
+        
+                    // Send data to backend
+                    fetch(backendURL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(formData)
+                    })
+                    .then(response => {
+                        console.log('Response status:', response.status); // Debug log
+                        if (!response.ok) {
+                            throw new Error(`Server responded with ${response.status}`);
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log('Success:', data); // Debug log
+                        document.getElementById('form-response').textContent = data;
+                        contactForm.reset();
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('form-response').textContent ='Error submitting form: ' + error.message;
+                    });
+                }); 
+            })            
+            .catch(error => {
+                console.error('Config loading error:',error);
             }); 
-        })
-        .catch(error => {
-            console.error('Config loading error:',error);
-        }); 
     }
 });
 

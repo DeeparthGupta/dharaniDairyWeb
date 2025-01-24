@@ -56,26 +56,35 @@ app.use((req, res, next) => {
   next();
 })
 
-// Database connection
-const db = mysql.createConnection({
-    host: process.env.MYSQL_HOST,
-    user: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE
-});
+// Database connection with retry logic
+const connectWithRetry = () => {
+	const db = mysql.createConnection({
+			host: process.env.MYSQL_HOST,
+			user: process.env.MYSQL_USER,
+			password: process.env.MYSQL_PASSWORD,
+			database: process.env.MYSQL_DATABASE
+	});
 
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection error:', err);
-        return;
-    }
-    logger.info('DB Connected')
-});
+	db.connect((err) => {
+			if (err) {
+					console.error('Database connection error:', err);
+					console.log('Retrying in 5 seconds...');
+					setTimeout(connectWithRetry, 5000);
+					return;
+			}
+			logger.info('DB Connected');
+	});
 
-/* // Test endpoint
-app.get('/test', (req, res) => {
-    res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
-}); */
+	return db;
+};
+
+const db = connectWithRetry();
+
+app.get('/config', (req, res) => {
+    res.json({
+      backendURL: `http://localhost:${port}/submit-form`
+    });
+});
 
 const validateFormInput = (req, res, next) => {
   try{
@@ -83,7 +92,7 @@ const validateFormInput = (req, res, next) => {
 
     // Check if name exists
     if(!name){
-      return res.status.json({
+      return res.status(400).json({
         error: 'Name is required'
       });
     }

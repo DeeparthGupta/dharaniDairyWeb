@@ -1,3 +1,0 @@
-{
-    "backendUrl": "http://localhost:${PORT}/submit-form"
-}
