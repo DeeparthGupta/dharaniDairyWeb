@@ -1,4 +1,4 @@
-name: Deploy to Oracle Cloud
+name: Deploy to Google Cloud Run
 
 on:
   push:
@@ -7,55 +7,32 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v2
-      
-      - name: Deploy to server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: opc
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |            
-            # Switch to bash explicitly
-            export SHELL=/bin/bash
-            
-            cd /var/www/dharaniWeb
-            
-            # Install PM2 locally if not present
-            if [ ! -e node_modules/pm2 ]; then
-                npm install pm2 --save
-            fi
-            
-            # Create ecosystem.config.js if it doesn't exist
-            if [ ! -e ecosystem.config.js ]; then
-                echo 'module.exports = {
-                  apps: [{
-                    name: "dharaniWeb",
-                    script: "./server.js",
-                    watch: true,
-                    env: {
-                      NODE_ENV: "production",
-                      PORT: 5000
-                    },
-                    max_memory_restart: "500M"
-                  }]
-                }' > ecosystem.config.js
-            fi
-            
-            git pull origin master
-            
-            if [ -e package.json ]; then
-                npm install
-            fi
-            
-            # Use the local PM2 from node_modules
-            if ./node_modules/.bin/pm2 list | grep -q "dharaniWeb"; then
-                ./node_modules/.bin/pm2 restart ecosystem.config.js
-            else
-                ./node_modules/.bin/pm2 start ecosystem.config.js
-                ./node_modules/.bin/pm2 save
-            fi
-            
-            # Check nginx config before restarting using Oracle Linux systemd commands
-            sudo nginx -t && sudo systemctl restart nginx.service || (echo "Nginx failed to restart. Checking logs..." && sudo journalctl -xe --unit=nginx.service)
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v0.2.0
+      with:
+        version: 'latest'
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Configure Docker
+      run: gcloud auth configure-docker
+
+    - name: Build Docker image
+      run: docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/dharani-web:$GITHUB_SHA .
+
+    - name: Push Docker image
+      run: docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/dharani-web:$GITHUB_SHA
+
+    - name: Deploy to Cloud Run
+      run: |
+        gcloud run deploy dharani-web \
+          --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/dharani-web:$GITHUB_SHA \
+          --platform managed \
+          --region asia-south1 \
+          --allow-unauthenticated \
+          --set-env-vars MYSQL_HOST=${{ secrets.MYSQL_HOST }},MYSQL_USER=${{ secrets.MYSQL_USER }},MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }},MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }},PORT=3000,NODE_ENV=production,LOGGER_MAX_SIZE=5242880
