@@ -75,7 +75,7 @@ db.connect((err) => {
 
 app.get('/config', (req, res) => {
     res.json({
-      backendURL: 'http://localhost:${PORT}/submit-form'
+      backendURL: `http://localhost:${port}/submit-form`
     });
 });
 
