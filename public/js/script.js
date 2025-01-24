@@ -147,44 +147,46 @@ document.addEventListener('DOMContentLoaded', function() {
 	}
 	
 	function setupFormSubmission(form, submitUrl) {
-			form.addEventListener('submit', function(e) {
-					e.preventDefault();
-					console.log('Form submission started');
+		form.addEventListener('submit', function(e) {
+			e.preventDefault();
+			console.log('Form submission started');
 	
-					const formData = {
-							name: document.getElementById('name').value,
-							email: document.getElementById('email').value,
-							phone: document.getElementById('phone').value,
-							message: document.getElementById('message').value
-					};
+			const formData = {
+				name: document.getElementById('name').value,
+				email: document.getElementById('email').value,
+				phone: document.getElementById('phone').value,
+				message: document.getElementById('message').value
+			};
 	
-					fetch(submitUrl, {
-							method: 'POST',
-							headers: {
-									'Content-Type': 'application/json',
-							},
-							body: JSON.stringify(formData)
-					})
-					.then(response => {
-							console.log('Response status:', response.status);
-							if (!response.ok) {
-								return response.json.then(err => {
-									throw new Error(err.error || `Server responded with ${response.status}`);
-								});
-							}
-							return response.json();
-					})
-					.then(data => {
-							console.log('Success:', data);
-							document.getElementById('form-response').textContent = data.message;
-							form.reset();
-					})
-					.catch(error => {
-							console.error('Error:', error);
-							document.getElementById('form-response').textContent = 
-									'Error submitting form: ' + error.message;
+			fetch(submitUrl, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(formData)
+			})
+			.then(response => {
+				console.log('Response status:', response.status);
+				if (!response.ok) {
+					return response.json().then(err => {
+						throw new Error(err.error);
+					}).catch(() => {
+						throw new Error(`Server responded with ${response.status}`);
 					});
+				}
+				return response.json();
+			})
+			.then(data => {
+				console.log('Success:', data);
+				document.getElementById('form-response').textContent = data.message;
+				form.reset();
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				document.getElementById('form-response').textContent = 
+					error.message || 'Error submitting form';
 			});
+		});
 	}
 });
 
