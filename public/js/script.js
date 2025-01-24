@@ -128,61 +128,62 @@ document.addEventListener('DOMContentLoaded', function() {
     // Contact Form Handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        fetch('/config')
-            .then(response => {
-                if(!response.ok){
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(config =>{
-                /* Get the submit URL from the server */
-                const backendURL = config.backendURL;
-
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    console.log('Form submission started'); // Debug log
-        
-                    // Get form values
-                    const formData = {
-                        name: document.getElementById('name').value,
-                        email: document.getElementById('email').value,
-                        phone: document.getElementById('phone').value,
-                        message: document.getElementById('message').value
-                    };
-        
-                    console.log('Form data:', formData); // Debug log
-        
-                    // Send data to backend
-                    fetch(backendURL, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(formData)
-                    })
-                    .then(response => {
-                        console.log('Response status:', response.status); // Debug log
-                        if (!response.ok) {
-                            throw new Error(`Server responded with ${response.status}`);
-                        }
-                        return response.text();
-                    })
-                    .then(data => {
-                        console.log('Success:', data); // Debug log
-                        document.getElementById('form-response').textContent = data;
-                        contactForm.reset();
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        document.getElementById('form-response').textContent ='Error submitting form: ' + error.message;
-                    });
-                }); 
-            })            
-            .catch(error => {
-                console.error('Config loading error:',error);
-            }); 
-    }
+			fetch('/config')
+					.then(response => {
+							if(!response.ok){
+									throw new Error(`HTTP error! status: ${response.status}`);
+							}
+							return response.json();
+					})
+					.then(config => {
+							const backendUrl = config.backendUrl || '/submit-form'; // Fallback to relative URL
+							setupFormSubmission(contactForm, backendUrl);
+					})
+					.catch(error => {
+							console.error('Config loading error:', error);
+							// Fallback to relative URL if config fails
+							setupFormSubmission(contactForm, '/submit-form');
+					}); 
+	}
+	
+	function setupFormSubmission(form, submitUrl) {
+			form.addEventListener('submit', function(e) {
+					e.preventDefault();
+					console.log('Form submission started');
+	
+					const formData = {
+							name: document.getElementById('name').value,
+							email: document.getElementById('email').value,
+							phone: document.getElementById('phone').value,
+							message: document.getElementById('message').value
+					};
+	
+					fetch(submitUrl, {
+							method: 'POST',
+							headers: {
+									'Content-Type': 'application/json',
+							},
+							body: JSON.stringify(formData)
+					})
+					.then(response => {
+							console.log('Response status:', response.status);
+							if (!response.ok) {
+									throw new Error(`Server responded with ${response.status}`);
+							}
+							return response.json();
+					})
+					.then(data => {
+							console.log('Success:', data);
+							document.getElementById('form-response').textContent = data.message;
+							form.reset();
+					})
+					.catch(error => {
+							console.error('Error:', error);
+							document.getElementById('form-response').textContent = 
+									'Error submitting form: ' + error.message;
+					});
+			});
+	}
 });
 
 // Debounce function for handling resize events
