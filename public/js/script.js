@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(response => response.json())
         .then(config =>{
             /* Get the submit URL from config.json */
-            const backendUrl = config.backendUrl.replace('${PORT}', process.env.PORT || 5000);
+            const backendUrl = config.backendUrl;
 
             contactForm.addEventListener('submit', function(e) {
                 e.preventDefault();

@@ -72,10 +72,12 @@ db.connect((err) => {
     logger.info('DB Connected')
 });
 
-/* // Test endpoint
-app.get('/test', (req, res) => {
-    res.json({ status: 'Server is running', timestamp: new Date().toISOString() });
-}); */
+
+app.get('/config', (req, res) => {
+    res.json({
+      backendURL: 'http://localhost:${PORT}/submit-form'
+    });
+});
 
 const validateFormInput = (req, res, next) => {
   try{
