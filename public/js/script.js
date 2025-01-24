@@ -1,7 +1,3 @@
-const { config } = require("dotenv");
-const { response } = require("express");
-const { error } = require("winston");
-
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all interactive elements
