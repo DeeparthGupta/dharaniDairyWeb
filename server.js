@@ -4,6 +4,7 @@ const cors = require('cors');
 const mysql = require('mysql2');
 const validator = require('validator');
 const winston = require('winston');
+const { config } = require('dotenv');
 
 //Configure winston for logging
 const logger = winston.createLogger({
@@ -70,13 +71,33 @@ const connectWithRetry = () => {
 	});
 
 	db.connect((err) => {
-			if (err) {
-					console.error('Database connection error:', err);
-					console.log('Retrying in 5 seconds...');
-					setTimeout(connectWithRetry, 5000);
-					return;
+		if (err) {
+			logger.error('Database connection error:', {
+					error: err.message,
+					stack: err.stack,
+					config:{
+						host: process.env.MYSQL_HOST,
+						user: process.env.MYSQL_USER,
+						database: process.env.MYSQL_DATABASE
+					}
+			});
+			console.log('Retrying in 5 seconds...');
+			setTimeout(connectWithRetry, 5000);
+			return;
+		}
+		logger.info('DB Connected');
+
+		db.query('SHOW TABLES', (err,result) =>	{
+			if(err){
+				logger.error('Failed to query tables:', {
+					error: err.message,
+					stack: err.stack
+				});
 			}
-			logger.info('DB Connected');
+			else{
+				logger.info('Available Tables:', result);
+			}
+		});
 	});
 
 	return db;
@@ -158,31 +179,47 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
     const { name, email, phone, message } = req.body;
     
     try{
-      const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?, ?)';
-      const [result] = await db.promise().query(query, [
-        name,
-        email || null,
-        phone || null,
-        message || ''
-      ]);
+		logger.info('Attempting form submission:', {
+			formData: {name, email, phone, hasMessage: !!message}
+		});
 
-      logger.info('Form Submitted', {id: result.insertId});
-      res.json({
-        message: 'Form submitted successfully',
-        id: result.insertId,
-        hasEmail: !!email,
-        hasPhone: !!phone
-      });
+		const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?, ?)';
+		logger.debug('Executing query:', {
+			query,
+			params: [name, email || null, phone || null, message || '']
+		});
+		const [result] = await db.promise().query(query, [
+			name,
+			email || null,
+			phone || null,
+			message || ''
+		]);
+
+		logger.info('Form Submitted', {
+			id: result.insertId,
+			hasEmail: !!email,
+			hasPhone: !!phone
+		});
+
+		res.json({
+			message: 'Form submitted successfully',
+			id: result.insertId
+		});
 
     }
     catch (err){
       logger.error('Form submission failed', {
         error: err.message,
-        hasEmail: !!email,
-        hasPhone: !!phone,
-        email: email || '',
-        phone: phone || ''
+		stack: err.stack,
+        sqlState: err.sqlState,
+		sqlMessage: err.sqlMessage,
+		formData:{
+			name,
+			hasEmail: !!email,
+			hasPhone: !!phone
+		}
       });
+	  
       res.status(500).json({
         error: 'Could not save your submission due to an error.'
       });
