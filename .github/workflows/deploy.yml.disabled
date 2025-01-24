@@ -33,6 +33,6 @@ jobs:
         gcloud run deploy dharani-web \
           --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/dharani-web:$GITHUB_SHA \
           --platform managed \
-          --region us-central1 \
+          --region asia-south1 \
           --allow-unauthenticated \
           --set-env-vars MYSQL_HOST=${{ secrets.MYSQL_HOST }},MYSQL_USER=${{ secrets.MYSQL_USER }},MYSQL_PASSWORD=${{ secrets.MYSQL_PASSWORD }},MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }},PORT=3000,NODE_ENV=production,LOGGER_MAX_SIZE=5242880
