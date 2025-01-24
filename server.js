@@ -38,7 +38,11 @@ const app = express();
 const port = process.env.PORT;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+	origin: '*',
+	methods: ['GET','POST'],
+	allowedHeaders: ['Content-Type']
+}));
 app.use(express.json());  // for parsing application/json
 app.use(express.urlencoded({ extended: true }));  // for parsing application/x-www-form-urlencoded
 app.use(express.static('public'));
@@ -81,9 +85,12 @@ const connectWithRetry = () => {
 const db = connectWithRetry();
 
 app.get('/config', (req, res) => {
-    res.json({
-      backendURL: `http://localhost:${port}/submit-form`
-    });
+	const protocol = req.headers['x-forwarded-proto'] || 'http';
+	const host = req.headers.host;
+
+	res.json({
+		backendURL: `${protocol}://${host}/submit-form`
+	});
 });
 
 const validateFormInput = (req, res, next) => {
