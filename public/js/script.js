@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Contact Form Handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-        fetch('/public/config.json')
+        fetch('/config.json')
         .then(response => response.json())
         .then(config =>{
             /* Get the submit URL from config.json */
