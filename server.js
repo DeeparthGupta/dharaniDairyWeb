@@ -6,6 +6,32 @@ const validator = require('validator');
 const winston = require('winston');
 const { config } = require('dotenv');
 
+const app = express();
+const port = parseInt(process.env.PORT) || 8080;
+
+// Get connection pool settings from environment variables
+const DB_MAX_CONNECTIONS = parseInt(process.env.DB_MAX_CONNECTIONS) || 10;
+const DB_IDLE_TIMEOUT = parseInt(process.env.DB_IDLE_TIMEOUT) || 60000;
+const DB_CONNECTION_TIMEOUT = parseInt(process.env.DB_CONNECTION_TIMEOUT) || 10000;
+
+// Connection tracking
+/* let activeConnections = 0;
+let lastConnectionTime = Date.now();
+const IDLE_TIMEOUT = parseInt(process.env.IDLE_TIMEOUT) || 300000; // 5 minutes default */
+
+const pool = mysql.createPool({
+	host: process.env.MYSQL_HOST,
+	user: process.env.MYSQL_USER,
+	password: process.env.MYSQL_PASSWORD,
+	database: process.env.MYSQL_DATABASE,
+	waitForConnections: true,
+	connectionLimit: DB_MAX_CONNECTIONS,
+	idleTimeout: DB_CONNECTION_TIMEOUT,
+	connectTimeout: DB_CONNECTION_TIMEOUT,
+	queueLimit: 0
+
+});
+
 //Configure winston for logging
 const logger = winston.createLogger({
   level:process.env.NODE_ENV === ('production'||'prod') ? 'info' : 'debug',
@@ -35,8 +61,36 @@ const logger = winston.createLogger({
   ]
 });
 
-const app = express();
-const port = process.env.PORT;
+pool.getConnection((err, connection) => {
+    if (err) {
+        logger.error('Database connection failed:', {
+            error: err.message,
+            stack: err.stack,
+            config: {
+                host: process.env.MYSQL_HOST,
+                user: process.env.MYSQL_USER,
+                database: process.env.MYSQL_DATABASE
+            }
+        });
+        return;
+    }
+    logger.info('Database pool connected');
+    
+    // Test query to verify connection
+    connection.query('SHOW TABLES', (err, results) => {
+        connection.release(); // Always release the connection
+        
+        if (err) {
+            logger.error('Failed to query tables:', {
+                error: err.message,
+                stack: err.stack
+            });
+            return;
+        }
+        logger.info('Available tables:', results);
+    });
+});
+
 
 // Middleware
 app.use(cors({
@@ -61,8 +115,9 @@ app.use((req, res, next) => {
   next();
 })
 
+
 // Database connection with retry logic
-const connectWithRetry = () => {
+/* const connectWithRetry = () => {
 	const db = mysql.createConnection({
 			host: process.env.MYSQL_HOST,
 			user: process.env.MYSQL_USER,
@@ -103,7 +158,7 @@ const connectWithRetry = () => {
 	return db;
 };
 
-const db = connectWithRetry();
+const db = connectWithRetry(); */
 
 app.get('/config', (req, res) => {
 	const protocol = req.headers['x-forwarded-proto'] || 'http';
@@ -188,7 +243,7 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
 			query,
 			params: [name, email || null, phone || null, message || '']
 		});
-		const [result] = await db.promise().query(query, [
+		const [result] = await pool.promise().query(query, [
 			name,
 			email || null,
 			phone || null,
@@ -229,25 +284,34 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
     logger.error('Server error', {
-      error: err.message,
-      url: req.url
+		error: err.message,
+		url: req.url
     });
 
     res.status(500).json({
-      error: process.env.NODE_ENV === ('production'||'prod')
-      ? 'An unexpected error has occured'
-      : err.message
+		error: process.env.NODE_ENV === ('production'||'prod')
+			? 'An unexpected error has occured'
+			: err.message
     });
 });
 
 // Start Server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+    logger.info('Server started', {
+        port: port,
+        env: process.env.NODE_ENV,
+        platform: 'Cloud Run'
+    });
 });
 
-// Graceful shutdown
-process.on('SIGTERM', () => {
-  logger.info('Server shutting down');
-  db.end();
-  process.exit(0);
+// Graceful shutdown with pool
+process.on('SIGTERM', async () => {
+    logger.info('Server shutting down');
+    try {
+        await pool.end();
+        logger.info('Database pool closed');
+    } catch (err) {
+        logger.error('Error closing pool:', err);
+    }
+    process.exit(0);
 });
