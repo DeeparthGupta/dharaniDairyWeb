@@ -14,10 +14,6 @@ const DB_MAX_CONNECTIONS = parseInt(process.env.DB_MAX_CONNECTIONS) || 10;
 const DB_IDLE_TIMEOUT = parseInt(process.env.DB_IDLE_TIMEOUT) || 60000;
 const DB_CONNECTION_TIMEOUT = parseInt(process.env.DB_CONNECTION_TIMEOUT) || 10000;
 
-// Connection tracking
-/* let activeConnections = 0;
-let lastConnectionTime = Date.now();
-const IDLE_TIMEOUT = parseInt(process.env.IDLE_TIMEOUT) || 300000; // 5 minutes default */
 
 const pool = mysql.createPool({
 	host: process.env.MYSQL_HOST,
@@ -25,6 +21,7 @@ const pool = mysql.createPool({
 	password: process.env.MYSQL_PASSWORD,
 	database: process.env.MYSQL_DATABASE,
 	waitForConnections: true,
+	enableKeepAlive:true,
 	connectionLimit: DB_MAX_CONNECTIONS,
 	idleTimeout: DB_CONNECTION_TIMEOUT,
 	connectTimeout: DB_CONNECTION_TIMEOUT,
@@ -40,26 +37,41 @@ const logger = winston.createLogger({
       format: 'YYYY-MM-DD HH:mm:ss'
     }),
     winston.format.json()
-  ),
-  transports:[
-    // Log all errors to file
-    new winston.transports.File({
-      filename: 'error.log',
-      level:'error',
-      maxsize: process.env.LOGGER_MAX_SIZE,
-      maxFiles: 5
-    }),
-    // Log important event to console
-    new winston.transports.Console({
-      format: winston.format.combine(
-        winston.format.colorize(),
-        winston.format.simple()
-      ),
-      // Warning and errors only in prod
-      level: process.env.NODE_ENV === ('production'||'prod')? 'warn' : 'info'
-    })
-  ]
+  )
 });
+
+// Logging in dev
+if(process.env.NODE_ENV !== ('production' || 'prod')){
+	logger.add(new winston.transports.Console({
+		format: winston.format.combine(
+			winston.format.colorize(),
+			winston.format.simple()
+		)
+	}));
+
+	logger.add(new winston.transports.File({
+		filename: 'error.log',
+		level: 'error',
+		maxsize: process.env.LOGGER_MAX_SIZE || 5242880,
+		maxFiles: 5
+	}));
+
+	logger.add(new winston.transports.File({
+		filename: 'combined.log',
+		maxsize: process.env.LOGGER_MAX_SIZE || 5242880,
+		maxFiles: 5
+	}));	
+}
+
+// Logging in prod
+if (process.env.NODE_ENV === 'production') {
+    logger.add(new winston.transports.Console({
+        format: winston.format.combine(
+            winston.format.timestamp(),
+            winston.format.json()
+        )
+    }));
+}
 
 pool.getConnection((err, connection) => {
     if (err) {
@@ -115,50 +127,6 @@ app.use((req, res, next) => {
   next();
 })
 
-
-// Database connection with retry logic
-/* const connectWithRetry = () => {
-	const db = mysql.createConnection({
-			host: process.env.MYSQL_HOST,
-			user: process.env.MYSQL_USER,
-			password: process.env.MYSQL_PASSWORD,
-			database: process.env.MYSQL_DATABASE
-	});
-
-	db.connect((err) => {
-		if (err) {
-			logger.error('Database connection error:', {
-					error: err.message,
-					stack: err.stack,
-					config:{
-						host: process.env.MYSQL_HOST,
-						user: process.env.MYSQL_USER,
-						database: process.env.MYSQL_DATABASE
-					}
-			});
-			console.log('Retrying in 5 seconds...');
-			setTimeout(connectWithRetry, 5000);
-			return;
-		}
-		logger.info('DB Connected');
-
-		db.query('SHOW TABLES', (err,result) =>	{
-			if(err){
-				logger.error('Failed to query tables:', {
-					error: err.message,
-					stack: err.stack
-				});
-			}
-			else{
-				logger.info('Available Tables:', result);
-			}
-		});
-	});
-
-	return db;
-};
-
-const db = connectWithRetry(); */
 
 app.get('/config', (req, res) => {
 	const protocol = req.headers['x-forwarded-proto'] || 'http';
