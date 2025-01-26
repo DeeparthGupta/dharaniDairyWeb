@@ -66,6 +66,8 @@ if(process.env.NODE_ENV !== ('production' || 'prod')){
 // Logging in prod
 if (process.env.NODE_ENV === 'production') {
     logger.add(new winston.transports.Console({
+		level: 'info',
+		stderrLevels: ['error', 'warn'],
         format: winston.format.combine(
 			winston.format.errors({ stack: true }),
             winston.format.timestamp(),
