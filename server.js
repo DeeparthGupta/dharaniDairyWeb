@@ -67,6 +67,7 @@ if(process.env.NODE_ENV !== ('production' || 'prod')){
 if (process.env.NODE_ENV === 'production') {
     logger.add(new winston.transports.Console({
         format: winston.format.combine(
+			winston.format.errors({ stack: true }),
             winston.format.timestamp(),
             winston.format.json()
         )
@@ -127,6 +128,19 @@ app.use((req, res, next) => {
   next();
 })
 
+// Error handling middleware
+app.use((err, req, res, next) => {
+    logger.error('Server error', {
+		error: err.message,
+		url: req.url
+    });
+
+    res.status(500).json({
+		error: process.env.NODE_ENV === ('production'||'prod')
+			? 'An unexpected error has occured'
+			: err.message
+    });
+});
 
 app.get('/config', (req, res) => {
 	const protocol = req.headers['x-forwarded-proto'] || 'http';
@@ -219,7 +233,7 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
 			]);
 
 			logger.info(`Form submission successful [${errorId}]`, { id: result.insertId });
-			req.json({
+			res.json({
 				message: 'Form submitted successfully',
 				id: result.insertId
 			});
@@ -229,9 +243,12 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
 			logger.error(`Database error [${errorId}]:`,{
 				error: sqlError.message,
                 code: sqlError.code,
-                sqlState: sqlError.sqlState,
-                sqlMessage: sqlError.sqlMessage,
-                stack: sqlError.stack
+				state: sqlError.state,
+                stack: sqlError.stack,
+				query: {
+					sqlError: sqlError.sql,
+					parameters: [name, email, phone, message]
+				}
 			});
 			throw sqlError;
 		}
@@ -246,25 +263,17 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
             ? `Database error [${errorId}]: ${err.message}`
             : 'Could not save your submission. Please try again.';
 
+		logger.error(`Form submission failed [${errorId}]:`, {
+			error: err.message,
+			code: err.code,
+			stack: err.stack
+		});
+
         res.status(500).json({
             error: errorMessage,
             errorId: errorId
         });
     }
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-    logger.error('Server error', {
-		error: err.message,
-		url: req.url
-    });
-
-    res.status(500).json({
-		error: process.env.NODE_ENV === ('production'||'prod')
-			? 'An unexpected error has occured'
-			: err.message
-    });
 });
 
 // Start Server
