@@ -29,37 +29,6 @@ const pool = mysql.createPool({
 
 });
 
-pool.getConnection((err, connection) => {
-    if (err) {
-        logger.error('Database connection failed:', {
-            error: err.message,
-            stack: err.stack,
-			state: err.state,
-            config: {
-                host: process.env.MYSQL_HOST,
-                user: process.env.MYSQL_USER,
-                database: process.env.MYSQL_DATABASE
-            }
-        });
-        return;
-    }
-    logger.info('Database pool connected');
-    
-    // Test query to verify connection
-    connection.query('SHOW TABLES', (err, results) => {
-        connection.release(); // Always release the connection
-        
-        if (err) {
-            logger.error('Failed to query tables:', {
-                error: err.message,
-                stack: err.stack
-            });
-            return;
-        }
-        logger.info('Available tables:', results);
-    });
-});
-
 //Configure winston for logging
 const logger = winston.createLogger({
   level:process.env.NODE_ENV === ('production'||'prod') ? 'info' : 'debug',
@@ -104,6 +73,36 @@ if (process.env.NODE_ENV === 'production') {
     }));
 }
 
+pool.getConnection((err, connection) => {
+    if (err) {
+        logger.error('Database connection failed:', {
+            error: err.message,
+            stack: err.stack,
+			state: err.state,
+            config: {
+                host: process.env.MYSQL_HOST,
+                user: process.env.MYSQL_USER,
+                database: process.env.MYSQL_DATABASE
+            }
+        });
+        return;
+    }
+    logger.info('Database pool connected');
+    
+    // Test query to verify connection
+    connection.query('SHOW TABLES', (err, results) => {
+        connection.release(); // Always release the connection
+        
+        if (err) {
+            logger.error('Failed to query tables:', {
+                error: err.message,
+                stack: err.stack
+            });
+            return;
+        }
+        logger.info('Available tables:', results);
+    });
+});
 
 // Middleware
 app.use(cors({
@@ -201,52 +200,56 @@ const validateFormInput = (req, res, next) => {
 // Form submission endpoint with validation
 app.post('/submit-form', validateFormInput, async (req, res) => {
     const { name, email, phone, message } = req.body;
+	const errorId = Date.now().toString(36);
     
     try{
-		logger.info('Attempting form submission:', {
-			formData: {name, email, phone, hasMessage: !!message}
-		});
+		logger.info(`Form submission attempt [${errorId}]:`, {
+            formData: { name, email, phone, hasMessage: !!message }
+        });
 
-		const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?, ?)';
-		logger.debug('Executing query:', {
-			query,
-			params: [name, email || null, phone || null, message || '']
-		});
-		const [result] = await pool.promise().query(query, [
-			name,
-			email || null,
-			phone || null,
-			message || ''
-		]);
+		// Test DB connection before making query
+		const connection = await pool.promise().getConnection();
+		try{
+			const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?, ?)';
+			const [result]  = await connection.execute(query, [
+				name,
+				email || null,
+				phone || null,
+				message ||''
+			]);
 
-		logger.info('Form Submitted', {
-			id: result.insertId,
-			hasEmail: !!email,
-			hasPhone: !!phone
-		});
-
-		res.json({
-			message: 'Form submitted successfully',
-			id: result.insertId
-		});
-
-    }
-    catch (err){
-      logger.error('Form submission failed', {
-        error: err.message,
-		stack: err.stack,
-        sqlState: err.sqlState,
-		sqlMessage: err.sqlMessage,
-		formData:{
-			name,
-			hasEmail: !!email,
-			hasPhone: !!phone
+			logger.info(`Form submission successful [${errorId}]`, { id: result.insertId });
+			req.json({
+				message: 'Form submitted successfully',
+				id: result.insertId
+			});
 		}
-      });
-	  
-      res.status(500).json({
-        error: 'Could not save your submission due to an error.'
-      });
+
+		catch (sqlError){
+			logger.error(`Database error [${errorId}]:`,{
+				error: sqlError.message,
+                code: sqlError.code,
+                sqlState: sqlError.sqlState,
+                sqlMessage: sqlError.sqlMessage,
+                stack: sqlError.stack
+			});
+			throw sqlError;
+		}
+
+		finally{
+			connection.release();
+		}
+    }
+
+    catch (err) {
+        const errorMessage = process.env.NODE_ENV === 'development' 
+            ? `Database error [${errorId}]: ${err.message}`
+            : 'Could not save your submission. Please try again.';
+
+        res.status(500).json({
+            error: errorMessage,
+            errorId: errorId
+        });
     }
 });
 
