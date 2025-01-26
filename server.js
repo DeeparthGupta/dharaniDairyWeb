@@ -23,7 +23,7 @@ const pool = mysql.createPool({
 	waitForConnections: true,
 	enableKeepAlive:true,
 	connectionLimit: DB_MAX_CONNECTIONS,
-	idleTimeout: DB_CONNECTION_TIMEOUT,
+	idleTimeout: DB_IDLE_TIMEOUT,
 	connectTimeout: DB_CONNECTION_TIMEOUT,
 	queueLimit: 0
 
