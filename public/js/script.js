@@ -165,27 +165,51 @@ document.addEventListener('DOMContentLoaded', function() {
 				},
 				body: JSON.stringify(formData)
 			})
-			.then(response => {
-				console.log('Response status:', response.status);
-				if (!response.ok) {
-					return response.json().then(err => {
-						throw new Error(err.error);
-					}).catch(() => {
-						throw new Error(`Server responded with ${response.status}`);
-					});
-				}
-				return response.json();
-			})
+			.then(async response => {
+                console.log('Response received:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    headers: Object.fromEntries(response.headers.entries())
+                });
+    
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    if (!response.ok) {
+                        throw { 
+                            status: response.status, 
+                            message: data.error || 'Unknown error',
+                            data 
+                        };
+                    }
+                    return data;
+                } else {
+                    const text = await response.text();
+                    console.error('Non-JSON response:', text);
+                    throw { 
+                        status: response.status,
+                        message: 'Invalid server response',
+                        responseText: text
+                    };
+                }
+            })
 			.then(data => {
 				console.log('Success:', data);
 				document.getElementById('form-response').textContent = data.message;
 				form.reset();
 			})
 			.catch(error => {
-				console.error('Error:', error);
-				document.getElementById('form-response').textContent = 
-					error.message || 'Error submitting form';
-			});
+                console.error('Detailed error:', {
+                    status: error.status,
+                    message: error.message,
+                    data: error.data,
+                    responseText: error.responseText,
+                    stack: error.stack
+                });
+                
+                document.getElementById('form-response').textContent = 
+                    error.message || 'Error submitting form. Please try again.';
+            });
 		});
 	}
 });

@@ -29,6 +29,37 @@ const pool = mysql.createPool({
 
 });
 
+pool.getConnection((err, connection) => {
+    if (err) {
+        logger.error('Database connection failed:', {
+            error: err.message,
+            stack: err.stack,
+			state: err.state,
+            config: {
+                host: process.env.MYSQL_HOST,
+                user: process.env.MYSQL_USER,
+                database: process.env.MYSQL_DATABASE
+            }
+        });
+        return;
+    }
+    logger.info('Database pool connected');
+    
+    // Test query to verify connection
+    connection.query('SHOW TABLES', (err, results) => {
+        connection.release(); // Always release the connection
+        
+        if (err) {
+            logger.error('Failed to query tables:', {
+                error: err.message,
+                stack: err.stack
+            });
+            return;
+        }
+        logger.info('Available tables:', results);
+    });
+});
+
 //Configure winston for logging
 const logger = winston.createLogger({
   level:process.env.NODE_ENV === ('production'||'prod') ? 'info' : 'debug',
@@ -72,36 +103,6 @@ if (process.env.NODE_ENV === 'production') {
         )
     }));
 }
-
-pool.getConnection((err, connection) => {
-    if (err) {
-        logger.error('Database connection failed:', {
-            error: err.message,
-            stack: err.stack,
-            config: {
-                host: process.env.MYSQL_HOST,
-                user: process.env.MYSQL_USER,
-                database: process.env.MYSQL_DATABASE
-            }
-        });
-        return;
-    }
-    logger.info('Database pool connected');
-    
-    // Test query to verify connection
-    connection.query('SHOW TABLES', (err, results) => {
-        connection.release(); // Always release the connection
-        
-        if (err) {
-            logger.error('Failed to query tables:', {
-                error: err.message,
-                stack: err.stack
-            });
-            return;
-        }
-        logger.info('Available tables:', results);
-    });
-});
 
 
 // Middleware
@@ -156,23 +157,23 @@ const validateFormInput = (req, res, next) => {
     }
       // Validate email if exists
     if(email){
-      if(!validator.isEmail(email)){
-        return res.status(400).json({
-          error: 'Invalid email address'
-        });
-      }
+		if(!validator.isEmail(email)){
+			return res.status(400).json({
+				error: 'Invalid email address'
+			});
+		}
     }
     
 
     // Validate phone if given
     if(phone){
-      const cleanPhone = validator.trim(phone.replace(/\s+/g, ''));
-      if(!validator.isMobilePhone(cleanPhone, ['en-IN'])){
-        return res.status(400).json({
-          error: 'Invalid phone number'
-        });
-      }
-      req.body.phone = cleanPhone;
+		const cleanPhone = validator.trim(phone.replace(/\s+/g, ''));
+			if(!validator.isMobilePhone(cleanPhone, ['en-IN'])){
+				return res.status(400).json({
+					error: 'Invalid phone number'
+				});
+			}
+		req.body.phone = cleanPhone;
     }
 
     // Sanitize inputs
