@@ -16,17 +16,13 @@ const DB_CONNECTION_TIMEOUT = parseInt(process.env.DB_CONNECTION_TIMEOUT) || 100
 
 
 const pool = mysql.createPool({
-	host: process.env.MYSQL_HOST,
-	user: process.env.MYSQL_USER,
-	password: process.env.MYSQL_PASSWORD,
-	database: process.env.MYSQL_DATABASE,
-	waitForConnections: true,
-	enableKeepAlive:true,
-	connectionLimit: DB_MAX_CONNECTIONS,
-	idleTimeout: DB_IDLE_TIMEOUT,
-	connectTimeout: DB_CONNECTION_TIMEOUT,
-	queueLimit: 0
-
+	socketPath: `/cloudsql/${process.env.MYSQL_HOST}`,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
+    waitForConnections: true,
+    connectionLimit: DB_MAX_CONNECTIONS,
+    queueLimit: 0
 });
 
 //Configure winston for logging
@@ -66,10 +62,10 @@ if(process.env.NODE_ENV !== ('production' || 'prod')){
 // Logging in prod
 if (process.env.NODE_ENV === 'production') {
     logger.add(new winston.transports.Console({
-		level: 'info',
-		stderrLevels: ['error', 'warn'],
+        level: 'info',
+        stderrLevels: ['error', 'warn'],
         format: winston.format.combine(
-			winston.format.errors({ stack: true }),
+            winston.format.errors({ stack: true }),
             winston.format.timestamp(),
             winston.format.json()
         )
