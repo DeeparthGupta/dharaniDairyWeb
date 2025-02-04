@@ -128,22 +128,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Contact Form Handling
     const contactForm = document.getElementById('contact-form');
     if (contactForm) {
-			fetch('/config')
-					.then(response => {
-							if(!response.ok){
-									throw new Error(`HTTP error! status: ${response.status}`);
-							}
-							return response.json();
-					})
-					.then(config => {
-							const backendUrl = config.backendUrl || '/submit-form'; // Fallback to relative URL
-							setupFormSubmission(contactForm, backendUrl);
-					})
-					.catch(error => {
-							console.error('Config loading error:', error);
-							// Fallback to relative URL if config fails
-							setupFormSubmission(contactForm, '/submit-form');
-					}); 
+        fetch(window.location.origin + '/config')
+            .then(response => {
+                if(!response.ok){
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(config => {
+                const backendUrl = config.backendUrl || '/submit-form'; // Fallback to relative URL
+                setupFormSubmission(contactForm, backendUrl);
+            })
+            .catch(error => {
+                console.error('Config loading error:', error);
+                // Fallback to relative URL if config fails
+                setupFormSubmission(contactForm, '/submit-form');
+            }); 
 	}
 	
 	function setupFormSubmission(form, submitUrl) {
