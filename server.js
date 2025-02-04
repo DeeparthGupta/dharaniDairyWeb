@@ -285,12 +285,14 @@ app.listen(port, '0.0.0.0', () => {
 
 // Graceful shutdown with pool
 process.on('SIGTERM', async () => {
-    logger.info('Server shutting down');
-    try {
-        await pool.end();
-        logger.info('Database pool closed');
-    } catch (err) {
-        logger.error('Error closing pool:', err);
-    }
-    process.exit(0);
+    logger.info('SIGTERM Recieved - waiting 30 seconds before shutting down...');
+	setTimeout(async () =>{
+		try {
+			await pool.end();
+			logger.info('Database pool closed');
+		} catch (err) {
+			logger.error('Error closing pool:', err);
+		}
+		process.exit(0);
+	}, 30000);
 });
