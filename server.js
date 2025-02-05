@@ -15,7 +15,7 @@ const DB_IDLE_TIMEOUT = parseInt(process.env.DB_IDLE_TIMEOUT) || 60000;
 const DB_CONNECTION_TIMEOUT = parseInt(process.env.DB_CONNECTION_TIMEOUT) || 10000;
 
 
-const pool = mysql.createPool({
+const poolConfig = {
 	socketPath: `/cloudsql/${process.env.MYSQL_HOST}`,
     user: process.env.MYSQL_USER,
     password: process.env.MYSQL_PASSWORD,
@@ -23,7 +23,21 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: DB_MAX_CONNECTIONS,
     queueLimit: 0
-});
+};
+
+function createPool(){
+	return mysql.createPool(poolConfig);
+}
+
+function getPool(){
+	if(!pool){
+		pool = createPool();
+		logger.info('Creating a new connection pool');
+	}
+	return pool;
+}
+
+let pool = createPool();
 
 //Configure winston for logging
 const logger = winston.createLogger({
@@ -220,7 +234,7 @@ app.post('/submit-form', validateFormInput, async (req, res) => {
         });
 
 		// Test DB connection before making query
-		const connection = await pool.promise().getConnection();
+		const connection = await getPool().promise().getConnection();
 		try{
 			const query = 'INSERT INTO contact_form (name, email, phone, message) VALUES (?, ?, ?, ?)';
 			const [result]  = await connection.execute(query, [
@@ -290,6 +304,7 @@ process.on('SIGTERM', async () => {
 		try {
 			await pool.end();
 			logger.info('Database pool closed');
+			pool = null;
 		} catch (err) {
 			logger.error('Error closing pool:', err);
 		}
